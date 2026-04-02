@@ -3,199 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Hợp đồng Solar - Pro Dashboard</title>
+    <title>SOLAR DOC V3.4 - PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/pizzip@3.1.4/dist/pizzip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docxtemplater@3.37.2/build/docxtemplater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); @apply shadow-xl shadow-slate-200/50 rounded-3xl p-6; }
-        .input-group label { @apply block text-[11px] font-bold text-slate-500 uppercase mb-1.5 tracking-widest ml-1; }
-        .input-group input, .input-group textarea { @apply w-full p-3.5 border-2 border-slate-100 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all bg-white text-sm font-medium shadow-sm; }
-        .btn-primary { @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-lg shadow-blue-500/30 active:scale-95 flex items-center justify-center gap-2; }
-        #authOverlay { background: radial-gradient(circle at top left, #1e293b, #0f172a); }
-        .step-badge { @apply w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold mb-4; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+            color: #1e293b;
+        }
+        .section-title {
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            letter-spacing: -0.025em;
+        }
+        .line-orange { border-bottom: 4px solid #f97316; margin-bottom: 2rem; }
+        .line-blue { border-bottom: 4px solid #3b82f6; margin-bottom: 2rem; }
+        .line-purple { border-bottom: 4px solid #a855f7; margin-bottom: 2rem; }
+        
+        .form-label {
+            display: block;
+            font-size: 1.25rem;
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.6rem 0;
+            font-size: 1.6rem;
+            border: none;
+            border-bottom: 2px solid #e2e8f0;
+            outline: none;
+            font-weight: 800;
+            color: #0f172a;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .form-input:focus { border-bottom: 3px solid #3b82f6; color: #2563eb; }
+        .form-input.highlight-blue { color: #2563eb; font-weight: 900; font-size: 2rem; }
+        .form-input.uppercase-input { text-transform: uppercase; }
+        .form-input::placeholder { color: #cbd5e1; font-weight: 400; }
+
+        /* Dark Preview Card */
+        .preview-card {
+            background: #0f172a;
+            border-radius: 2rem;
+            padding: 2.5rem;
+            color: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-export {
+            background: #3b82f6;
+            color: white;
+            font-weight: 800;
+            padding: 0.85rem 1.75rem;
+            border-radius: 1rem;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+        }
+        .btn-export:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.5); }
+        
+        #authOverlay { background: #020617; }
     </style>
 </head>
-<body class="p-4 md:p-10 lg:p-16">
+<body class="bg-slate-50 min-h-screen">
 
-    <!-- MÀN HÌNH KHÓA MẬT KHẨU -->
+    <!-- MÀN HÌNH KHÓA -->
     <div id="authOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-6">
-        <div class="bg-white/10 backdrop-blur-md p-1 border border-white/20 rounded-[40px] shadow-2xl max-w-md w-full">
-            <div class="bg-white p-10 rounded-[36px] text-center">
-                <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Xin chào!</h2>
-                <p class="text-slate-500 text-sm mb-8 leading-relaxed">Vui lòng nhập mã truy cập hệ thống <br>để tiếp tục làm việc.</p>
-                <div class="space-y-4">
-                    <input type="password" id="passInput" placeholder="••••••" class="w-full p-5 border-2 border-slate-100 rounded-2xl mb-2 text-center text-2xl tracking-[0.5em] focus:border-blue-500 outline-none transition-all">
-                    <button id="loginBtn" class="btn-primary w-full text-lg">Xác nhận</button>
-                    <p id="errorMsg" class="text-red-500 text-xs font-bold mt-2 hidden uppercase tracking-tighter">Mật khẩu không chính xác!</p>
-                </div>
-            </div>
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center">
+            <h2 class="text-2xl font-black mb-6 tracking-tight">XÁC THỰC</h2>
+            <input type="password" id="passInput" placeholder="••••" class="w-full p-5 border-2 rounded-2xl text-center text-3xl mb-6 outline-none focus:border-blue-500 tracking-widest bg-slate-50">
+            <button id="loginBtn" class="bg-blue-600 text-white w-full py-5 rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">ĐĂNG NHẬP</button>
+            <p id="errorMsg" class="text-red-500 text-xs mt-4 font-bold hidden uppercase">Mật khẩu không chính xác</p>
         </div>
     </div>
 
     <!-- NỘI DUNG CHÍNH -->
-    <div id="mainContent" class="max-w-6xl mx-auto hidden opacity-0 transition-all duration-1000 transform translate-y-4">
-        <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <h1 class="text-3xl font-black text-slate-900 tracking-tight">SolarDoc <span class="text-blue-600">Enterprise</span></h1>
-                <p class="text-slate-500 text-sm font-medium mt-1">Hệ thống tạo hợp đồng tự động chuyên nghiệp</p>
-            </div>
-            <button onclick="location.reload()" class="bg-white border border-slate-200 px-6 py-2.5 rounded-xl font-bold text-xs text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                Đăng xuất
-            </button>
-        </header>
+    <div id="mainContent" class="max-w-[1300px] mx-auto p-6 md:p-16 hidden">
+        <div class="flex justify-between items-center mb-16">
+            <h1 class="text-4xl font-black text-slate-900 tracking-tighter">SOLAR DOC <span class="text-blue-600 font-black">V3.4</span></h1>
+            <button onclick="location.reload()" class="text-[11px] font-black text-slate-400 border-2 border-slate-200 px-5 py-2 rounded-full uppercase hover:bg-white hover:text-slate-600 transition-all">Đăng xuất hệ thống</button>
+        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- CỘT TRÁI: NHẬP LIỆU -->
-            <div class="lg:col-span-7 space-y-8">
-                
-                <!-- BƯỚC 1 -->
-                <div class="glass-card">
-                    <div class="step-badge">1</div>
-                    <h3 class="text-lg font-bold mb-4 text-slate-800">File mẫu hợp đồng</h3>
-                    <div class="relative group">
-                        <input type="file" id="templateUpload" accept=".docx" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                        <div class="border-2 border-dashed border-slate-200 group-hover:border-blue-400 group-hover:bg-blue-50/50 rounded-2xl p-8 transition-all text-center">
-                            <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                            </div>
-                            <p class="text-sm font-bold text-slate-700" id="fileNameDisplay">Kéo thả file .docx hoặc bấm vào đây</p>
-                            <p class="text-xs text-slate-400 mt-1">Định dạng hỗ trợ: Microsoft Word (.docx)</p>
-                        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+            
+            <!-- CỘT TRÁI -->
+            <div class="space-y-16">
+                <!-- PHẦN 1 -->
+                <div>
+                    <h2 class="section-title text-orange-600">1. TẢI FILE WORD MẪU (.DOCX)</h2>
+                    <div class="line-orange"></div>
+                    <div class="flex items-center gap-6">
+                        <input type="file" id="templateUpload" accept=".docx" class="hidden">
+                        <button onclick="document.getElementById('templateUpload').click()" class="bg-orange-600 text-white px-8 py-3 rounded-xl font-black hover:bg-orange-700 transition-all text-sm shadow-lg shadow-orange-200">CHỌN TỆP MẪU</button>
+                        <span id="fileNameDisplay" class="text-slate-400 text-base italic font-bold truncate max-w-[250px]">Chưa chọn file...</span>
                     </div>
                 </div>
 
-                <!-- BƯỚC 2 -->
-                <div class="glass-card">
-                    <div class="step-badge">2</div>
-                    <h3 class="text-lg font-bold mb-6 text-slate-800">Chi tiết khách hàng & Hợp đồng</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="input-group md:col-span-1"><label>Mã số hợp đồng</label><input type="text" id="contractNo" value="01/2026/HĐNT/XT_AT"></div>
-                        <div class="input-group md:col-span-1"><label>Ngày ký kết</label><input type="date" id="contractDate"></div>
-                        
-                        <div class="input-group md:col-span-2">
-                            <label>Họ và tên khách hàng</label>
-                            <input type="text" id="customerName" placeholder="Ví dụ: NGUYỄN VĂN A" class="uppercase text-lg font-bold text-blue-900 tracking-tight">
+                <!-- PHẦN 2 -->
+                <div>
+                    <h2 class="section-title text-blue-600">2. THÔNG TIN CHI TIẾT HỢP ĐỒNG</h2>
+                    <div class="line-blue"></div>
+                    
+                    <div class="grid grid-cols-2 gap-x-12 gap-y-10">
+                        <div class="form-group">
+                            <label class="form-label">Số HĐ</label>
+                            <input type="text" id="contractNo" class="form-input" value="01/2026/HĐNT/XT_AT">
+                        </div>
+                        <div class="form-group text-right">
+                            <label class="form-label">Ngày ký kết</label>
+                            <input type="date" id="contractDate" class="form-input text-right">
                         </div>
 
-                        <div class="input-group"><label>Số CCCD / CMND</label><input type="text" id="cccd"></div>
-                        <div class="input-group"><label>Số điện thoại</label><input type="text" id="phone"></div>
-                        
-                        <div class="input-group md:col-span-2"><label>Địa chỉ thường trú</label><textarea id="address" rows="2" placeholder="Số nhà, đường, phường/xã, quận/huyện..."></textarea></div>
-                        
-                        <div class="input-group md:col-span-2">
-                            <label>Tổng giá trị (VNĐ)</label>
-                            <div class="relative">
-                                <input type="number" id="totalValue" value="187600000" class="pl-14 text-2xl font-extrabold text-blue-600 bg-blue-50/30 border-blue-100">
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400 font-bold">₫</div>
-                            </div>
+                        <div class="form-group col-span-2">
+                            <label class="form-label">Tên khách hàng (Bên A)</label>
+                            <input type="text" id="customerName" class="form-input uppercase-input !text-blue-700" placeholder="NGUYỄN VĂN A">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Số CCCD</label>
+                            <input type="text" id="cccd" class="form-input" placeholder="001xxxxxxxx">
+                        </div>
+                        <div class="form-group text-right">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="text" id="phone" class="form-input text-right" placeholder="09xxxxxxxx">
+                        </div>
+
+                        <div class="form-group col-span-2">
+                            <label class="form-label">Địa chỉ lắp đặt / Thường trú</label>
+                            <textarea id="address" class="form-input" rows="1" placeholder="Nhập địa chỉ đầy đủ..."></textarea>
+                        </div>
+
+                        <div class="form-group col-span-2">
+                            <label class="form-label">Tổng giá trị hợp đồng (VNĐ)</label>
+                            <input type="number" id="totalValue" class="form-input highlight-blue" value="187600000">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- CỘT PHẢI: KẾT QUẢ -->
-            <div class="lg:col-span-5 space-y-8">
-                
-                <!-- TÊN FILE -->
-                <div class="glass-card border-l-8 border-l-purple-500">
-                    <div class="step-badge !bg-purple-100 !text-purple-600">3</div>
-                    <h3 class="text-lg font-bold mb-4 text-slate-800">Tên file khi tải về</h3>
-                    <div class="input-group">
-                        <input type="text" id="customFileName" placeholder="VD: Hop_dong_Gia_Lam_HN" class="!bg-purple-50/50 !border-purple-100">
-                        <p class="text-[10px] text-purple-400 mt-2 font-medium italic">Nếu bỏ trống, hệ thống tự động đặt tên theo khách hàng.</p>
-                    </div>
+            <!-- CỘT PHẢI -->
+            <div class="space-y-16">
+                <!-- PHẦN 3 -->
+                <div>
+                    <h2 class="section-title text-purple-600">3. Tùy chỉnh tên File xuất ra</h2>
+                    <div class="line-purple"></div>
+                    <input type="text" id="customFileName" class="form-input !text-purple-600 !text-xl font-bold italic" placeholder="Ví dụ: Hop_dong_anh_Thanh">
+                    <p class="text-[11px] text-slate-400 mt-3 font-bold">* Hệ thống sẽ tự thêm đuôi .docx khi tải về.</p>
                 </div>
 
                 <!-- XEM TRƯỚC -->
-                <div class="bg-slate-900 rounded-[32px] p-8 text-white shadow-2xl shadow-slate-900/40 sticky top-8">
-                    <div class="flex justify-between items-start mb-8">
+                <div class="preview-card">
+                    <div class="flex justify-between items-center mb-12">
                         <div>
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Cơ cấu thanh toán</h3>
-                            <p class="text-xl font-bold">Tóm tắt hợp đồng</p>
+                            <h3 class="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] mb-1">Live Preview</h3>
+                            <p class="text-lg font-black text-white">CƠ CẤU THANH TOÁN</p>
                         </div>
-                        <div class="bg-blue-600/20 text-blue-400 p-2 rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                        </div>
+                        <button id="generateBtn" class="btn-export">TẠI FILE WORD</button>
                     </div>
 
-                    <div class="space-y-8">
+                    <div class="space-y-12">
                         <!-- ĐỢT 1 -->
                         <div>
-                            <div class="flex justify-between items-end mb-2">
-                                <span class="text-xs font-bold text-blue-400 uppercase">Đợt 1 (Tạm ứng 20%)</span>
-                                <span id="viewS1Val" class="text-lg font-bold text-white">0 ₫</span>
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <span class="text-[11px] font-black text-blue-400 uppercase tracking-widest">Đợt 1: Tạm ứng (20%)</span>
                             </div>
-                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                                <div class="bg-blue-500 h-full w-[20%]"></div>
+                            <div class="flex items-baseline gap-3">
+                                <span id="viewS1Val" class="text-4xl font-black tracking-tighter">0</span>
+                                <span class="text-blue-500 font-black text-base italic">VNĐ</span>
                             </div>
-                            <p id="viewS1Text" class="text-[10px] text-slate-500 italic mt-2 leading-tight">...</p>
+                            <p id="viewS1Text" class="text-[11px] text-slate-400 italic mt-2 font-bold leading-relaxed">...</p>
                         </div>
 
                         <!-- ĐỢT 2 -->
                         <div>
-                            <div class="flex justify-between items-end mb-2">
-                                <span class="text-xs font-bold text-green-400 uppercase">Đợt 2 (Hoàn thành 80%)</span>
-                                <span id="viewS2Val" class="text-lg font-bold text-white">0 ₫</span>
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                <span class="text-[11px] font-black text-green-400 uppercase tracking-widest">Đợt 2: Nghiệm thu (80%)</span>
                             </div>
-                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                                <div class="bg-green-500 h-full w-[80%]"></div>
+                            <div class="flex items-baseline gap-3">
+                                <span id="viewS2Val" class="text-4xl font-black tracking-tighter">0</span>
+                                <span class="text-green-500 font-black text-base italic">VNĐ</span>
                             </div>
-                            <p id="viewS2Text" class="text-[10px] text-slate-500 italic mt-2 leading-tight">...</p>
+                            <p id="viewS2Text" class="text-[11px] text-slate-400 italic mt-2 font-bold leading-relaxed">...</p>
                         </div>
 
-                        <!-- TỔNG CỘNG -->
-                        <div class="pt-6 border-t border-slate-800 flex justify-between items-center">
-                            <span class="text-sm font-bold text-slate-400">TỔNG CỘNG</span>
-                            <span id="viewTotalVal" class="text-3xl font-black text-yellow-400">0 ₫</span>
+                        <!-- TỔNG GIÁ TRỊ -->
+                        <div class="pt-10 border-t border-slate-800 flex flex-col items-end">
+                            <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2">Tổng quyết toán</span>
+                            <div class="flex items-baseline gap-3">
+                                <span id="viewTotalVal" class="text-5xl font-black text-yellow-400 tracking-tighter">0</span>
+                                <span class="text-yellow-400 font-black text-lg italic">VNĐ</span>
+                            </div>
                         </div>
                     </div>
-
-                    <button id="generateBtn" class="btn-primary w-full mt-10 !bg-blue-600 hover:!bg-blue-500 group">
-                        <span>XUẤT HỢP ĐỒNG NGAY</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                    </button>
-                    <div id="statusMsg" class="mt-4 text-[10px] text-center font-bold uppercase py-2 px-4 rounded-xl hidden"></div>
+                    
+                    <div id="statusMsg" class="absolute bottom-4 left-0 right-0 text-center text-[10px] font-black uppercase tracking-[0.2em] hidden"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const MY_PASSWORD = "123"; 
-
-        // Xử lý hiển thị tên file
-        document.getElementById('templateUpload').onchange = function(e) {
-            const fileName = e.target.files[0] ? e.target.files[0].name : "Kéo thả file .docx hoặc bấm vào đây";
-            document.getElementById('fileNameDisplay').innerText = fileName;
-        };
+        const MY_PASSWORD = "123";
 
         // Auth logic
         document.getElementById('loginBtn').onclick = function() {
-            const pin = document.getElementById('passInput').value;
-            if(pin === MY_PASSWORD) {
+            if(document.getElementById('passInput').value === MY_PASSWORD) {
                 document.getElementById('authOverlay').style.display = 'none';
-                const main = document.getElementById('mainContent');
-                main.classList.remove('hidden');
-                setTimeout(() => main.classList.add('opacity-100', 'translate-y-0'), 50);
+                document.getElementById('mainContent').classList.remove('hidden');
             } else {
                 document.getElementById('errorMsg').classList.remove('hidden');
                 document.getElementById('passInput').value = "";
-                document.getElementById('passInput').focus();
             }
         };
 
-        document.getElementById('passInput').onkeydown = (e) => { if(e.key === "Enter") document.getElementById('loginBtn').click(); };
+        // File display
+        document.getElementById('templateUpload').onchange = function(e) {
+            document.getElementById('fileNameDisplay').innerText = e.target.files[0] ? e.target.files[0].name : "Chưa chọn file...";
+        };
 
+        // Tiếng Việt đọc số
         function docSoTiengViet(number) {
             if (number === 0) return "Không đồng";
             const units = ["", "nghìn", "triệu", "tỷ", "nghìn tỷ", "triệu tỷ"];
@@ -219,71 +259,86 @@
             return final.charAt(0).toUpperCase() + final.slice(1) + " đồng.";
         }
 
-        const format = (n) => new Intl.NumberFormat('vi-VN').format(Math.round(n));
+        const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(Math.round(n));
 
-        function update() {
+        function updatePreview() {
             const total = parseFloat(document.getElementById('totalValue').value) || 0;
-            const s1 = total * 0.2, s2 = total * 0.8;
-            document.getElementById('viewTotalVal').innerText = format(total) + " ₫";
-            document.getElementById('viewS1Val').innerText = format(s1) + " ₫";
-            document.getElementById('viewS2Val').innerText = format(s2) + " ₫";
+            const s1 = total * 0.2;
+            const s2 = total * 0.8;
+
+            document.getElementById('viewTotalVal').innerText = formatVND(total);
+            document.getElementById('viewS1Val').innerText = formatVND(s1);
+            document.getElementById('viewS2Val').innerText = formatVND(s2);
+
             document.getElementById('viewS1Text').innerText = docSoTiengViet(s1);
             document.getElementById('viewS2Text').innerText = docSoTiengViet(s2);
         }
 
+        // Generate Logic
         document.getElementById('generateBtn').onclick = function() {
             const fileInput = document.getElementById('templateUpload');
             const status = document.getElementById('statusMsg');
+            
             if (!fileInput.files[0]) {
-                status.innerText = "Chưa chọn file mẫu!";
-                status.className = "mt-4 text-[10px] text-center font-bold py-2 px-4 rounded-xl block bg-red-500/20 text-red-500";
+                status.innerText = "LỖI: CHƯA CHỌN FILE MẪU!";
+                status.className = "absolute bottom-4 left-0 right-0 text-center text-[10px] font-black uppercase block text-red-500 bg-red-500/10 py-1";
+                status.classList.remove('hidden');
                 return;
             }
-            status.innerText = "Đang xử lý dữ liệu...";
-            status.className = "mt-4 text-[10px] text-center font-bold py-2 px-4 rounded-xl block bg-blue-500/20 text-blue-500";
+
+            status.innerText = "ĐANG XỬ LÝ DỮ LIỆU...";
+            status.className = "absolute bottom-4 left-0 right-0 text-center text-[10px] font-black uppercase block text-blue-400 bg-blue-500/10 py-1";
+            status.classList.remove('hidden');
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const zip = new PizZip(e.target.result);
                     const doc = new window.docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+                    
                     const total = parseFloat(document.getElementById('totalValue').value) || 0;
                     const d = document.getElementById('contractDate').value ? new Date(document.getElementById('contractDate').value) : new Date();
-                    const customerNameRaw = document.getElementById('customerName').value || "Khách hàng";
+                    const nameRaw = document.getElementById('customerName').value || "Khách hàng";
                     const fileNameInput = document.getElementById('customFileName').value.trim();
-                    const finalFileName = fileNameInput ? fileNameInput : `HD_Solar_${customerNameRaw}`;
+                    const finalFileName = fileNameInput ? fileNameInput : `HD_Solar_${nameRaw.replace(/\s+/g, '_')}`;
 
                     doc.setData({
                         contractNo: document.getElementById('contractNo').value,
-                        customerName: customerNameRaw.toUpperCase(),
+                        customerName: nameRaw.toUpperCase(),
                         cccd: document.getElementById('cccd').value,
                         phone: document.getElementById('phone').value,
                         address: document.getElementById('address').value,
-                        totalValue: format(total) + " VNĐ",
+                        totalValue: formatVND(total) + " VNĐ",
                         totalText: docSoTiengViet(total),
-                        s1Value: format(total*0.2) + " VNĐ",
-                        s1Text: docSoTiengViet(total*0.2),
-                        s2Value: format(total*0.8) + " VNĐ",
-                        s2Text: docSoTiengViet(total*0.8),
+                        s1Value: formatVND(total * 0.2) + " VNĐ",
+                        s1Text: docSoTiengViet(total * 0.2),
+                        s2Value: formatVND(total * 0.8) + " VNĐ",
+                        s2Text: docSoTiengViet(total * 0.8),
                         day: String(d.getDate()).padStart(2, '0'),
                         month: String(d.getMonth() + 1).padStart(2, '0'),
                         year: d.getFullYear()
                     });
+
                     doc.render();
-                    saveAs(doc.getZip().generate({ type: "blob" }), `${finalFileName}.docx`);
-                    status.innerText = "Xuất file thành công!";
-                    status.className = "mt-4 text-[10px] text-center font-bold py-2 px-4 rounded-xl block bg-green-500/20 text-green-500";
-                } catch (err) {
-                    status.innerText = "Lỗi xử lý file Word!";
-                    status.className = "mt-4 text-[10px] text-center font-bold py-2 px-4 rounded-xl block bg-red-500/20 text-red-500";
+                    const out = doc.getZip().generate({ type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+                    saveAs(out, `${finalFileName}.docx`);
+                    
+                    status.innerText = "XUẤT FILE THÀNH CÔNG!";
+                    status.className = "absolute bottom-4 left-0 right-0 text-center text-[10px] font-black uppercase block text-green-400 bg-green-500/10 py-1";
+                } catch (error) {
+                    status.innerText = "LỖI HỆ THỐNG!";
+                    status.className = "absolute bottom-4 left-0 right-0 text-center text-[10px] font-black uppercase block text-red-500 bg-red-500/10 py-1";
                 }
             };
             reader.readAsArrayBuffer(fileInput.files[0]);
         };
 
         window.onload = () => {
-            ['contractNo', 'customerName', 'cccd', 'phone', 'address', 'totalValue', 'contractDate'].forEach(id => document.getElementById(id).oninput = update);
             document.getElementById('contractDate').valueAsDate = new Date();
-            update();
+            ['totalValue', 'contractDate', 'customerName'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updatePreview);
+            });
+            updatePreview();
         };
     </script>
 </body>
