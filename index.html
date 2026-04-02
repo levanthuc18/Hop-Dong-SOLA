@@ -47,7 +47,7 @@
             transition: all 0.2s;
         }
         .form-input:focus { border-bottom: 2px solid #3b82f6; color: #2563eb; }
-        .form-input.highlight-blue { color: #2563eb; font-weight: 900; font-size: 1.5rem; }
+        .form-input.highlight-blue { color: #2563eb; font-weight: 900; font-size: 1.5rem; cursor: pointer; }
         .form-input.uppercase-input { text-transform: uppercase; }
         .form-input::placeholder { color: #cbd5e1; font-weight: 400; }
 
@@ -140,8 +140,8 @@
 
                         <div class="form-group col-span-2">
                             <label class="form-label">Tổng giá trị hợp đồng (VNĐ)</label>
-                            <!-- Chuyển type thành text để xử lý định dạng dấu chấm -->
-                            <input type="text" id="totalValueDisplay" class="form-input highlight-blue" value="187.600.000">
+                            <!-- Click vào là tự động bôi đen toàn bộ số cũ -->
+                            <input type="text" id="totalValueDisplay" class="form-input highlight-blue" value="187.600.000" onclick="this.select()" title="Click để nhập số mới">
                         </div>
                     </div>
                 </div>
@@ -205,7 +205,7 @@
     </div>
 
     <script>
-        const MY_PASSWORD = "123";
+        const MY_PASSWORD = "thuchau";
 
         document.getElementById('loginBtn').onclick = function() {
             if(document.getElementById('passInput').value === MY_PASSWORD) {
@@ -246,12 +246,10 @@
 
         const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(Math.round(n));
 
-        // Hàm lấy giá trị số thuần từ chuỗi có dấu chấm
         function getRawValue(str) {
             return parseFloat(str.replace(/\./g, '')) || 0;
         }
 
-        // Hàm định dạng chuỗi nhập vào với dấu chấm
         function formatInput(e) {
             let value = e.target.value.replace(/\./g, '');
             if (!isNaN(value) && value !== "") {
@@ -333,10 +331,8 @@
 
         window.onload = () => {
             document.getElementById('contractDate').valueAsDate = new Date();
-            
             const totalInp = document.getElementById('totalValueDisplay');
             totalInp.addEventListener('input', formatInput);
-            
             ['contractDate', 'customerName'].forEach(id => {
                 document.getElementById(id).addEventListener('input', updatePreview);
             });
